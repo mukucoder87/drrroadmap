@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRR Actions Mapping Tool</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f7;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #2980b9;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 40px;
+            color: #7f8c8d;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+            display: block;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="submit"], button {
+            background-color: #2980b9;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover, button:hover {
+            background-color: #1a5276;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .component-box {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            position: relative;
+            border-left: 5px solid #2980b9;
+        }
+
+        button.remove-component {
+            background-color: #e74c3c;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .styled-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .styled-table th, .styled-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .styled-table thead {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .form-header {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .add-component-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .add-component-btn:hover {
+            background-color: #229954;
+        }
+
+        /* Export Buttons */
+        .export-buttons button {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .export-buttons button:hover {
+            background-color: #d68910;
+        }
+
+        /* Activity Block */
+        .activity-block {
+            border: 1px solid #bdc3c7;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .remove-activity-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+    <!-- Include jsPDF and jsPDF-AutoTable for PDF export functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-header">
+        <h1>Disaster Risk Reduction (DRR) Actions Mapping Tool</h1>
+    </div>
+    <h2>Assam Disaster Risk Reduction Roadmap 2030: Status Reporting Tool(Prototype)</h2>
+    <p>A User Friendly Tool to track DRR milestones, common measurable indicators against major actions and SFDRR Traget and Priorities</p>
+
+    <!-- Department Input Form -->
+    <div class="form-section">
+        <h3>DRR Actions Submission Form</h3>
+        <form id="drrForm">
+            <!-- Department Details -->
+            <label for="department">Department Name:</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                 <option value="3.1.1">Department of Elementary & Secondary Education</option>
+                <option value="3.1.2">Department of Higher Education</option>
+                <option value="3.1.3">Department of Food, Civil Supplies & Consumer Affairs</option>
+                <option value="3.1.4">Department of Health & Family Welfare</option>
+                <option value="3.1.5">Department of Hill Areas</option>
+                <option value="3.1.6">Department of Panchayat & Rural Development</option>
+                <option value="3.1.7">Department of Public Health Engineering</option>
+                <option value="3.1.8">Department of Women and Child Development & Department of Social Justice and Empowerment</option>
+                <option value="3.2.1">Department of Border Protection & Development</option>
+                <option value="3.2.2">Department of Cooperation</option>
+                <option value="3.2.3">Department of Environment and Forest</option>
+                <option value="3.2.4">Department of Industries & Commerce</option>
+                <option value="3.2.5">Department of Information & Public Relations</option>
+                <option value="3.2.6">Department of Information Technology</option>
+                <option value="3.2.7">Department of Mines & Minerals</option>
+                <option value="3.2.8">Department of Power</option>
+                <option value="3.2.9">Department of Public Works (Buildings & National Highway)</option>
+                <option value="3.2.10">Department of Public Works (Roads)</option>
+                <option value="3.2.11">Department of Science & Technology</option>
+                <option value="3.2.12">Department of Soil Conservation</option>
+                <option value="3.2.13">Department of Sports and Youth Welfare</option>
+                <option value="3.2.14">Department of Transport</option>
+                <option value="3.2.15">Department of Water Resources</option>
+                <option value="3.3.1">Department of Cultural Affairs</option>
+                <option value="3.3.2">Department of Guwahati Development</option>
+                <option value="3.3.3">Department of Urban Development</option>
+                <option value="3.4.1">Department of Agriculture & Horticulture</option>
+                <option value="3.4.2">Department of Animal Husbandry & Veterinary</option>
+                <option value="3.4.3">Department of Fishery</option>
+                <option value="3.4.4">Department of Handloom, Textiles & Sericulture</option>
+                <option value="3.4.5">Department of Irrigation</option>
+                <option value="3.4.6">Department of Labour & Welfare</option>
+                <option value="3.4.7">Department of Pension & Public Grievances</option>
+                <option value="3.4.8">Department of Skill, Employment & Entrepreneurship</option>
+                <option value="3.4.9">Department of Tea Tribes</option>
+                <option value="3.4.10">Department of Tourism</option>
+                <option value="3.4.11">Department of Welfare of Minorities & Development</option>
+                <option value="3.4.12">Department of Welfare of Plain Tribes & Backward Classes</option>
+                <option value="3.7.1">Department of Finance</option>
+            </select>
+
+            <!-- Dynamic SFDRR Components Section -->
+            <div id="sfdrrComponents"></div>
+            
+            <!-- Add New SFDRR Component Button -->
+            <button type="button" class="add-component-btn" id="addComponent">+ Add SFDRR Component</button>
+
+            <!-- Submit Button -->
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- Submitted Data Summary -->
+    <div class="form-section" id="summarySection1" style="display:none;">
+        <h3>Summary Table 1: Department of <span id="deptNameDisplay1"></span></h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>SFDRR Targets</th>
+                    <th>Milestones</th>
+                    <th>Common Measurable Indicators</th>
+                    <th>DRR Action considered for achieving the selected Milestone and CMI</th>
+                    <th>Sendai Framework Priority</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody1">
+                <!-- Summary details will be populated here after form submission -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Second Summary Table -->
+    <div class="form-section" id="summarySection2" style="display:none;">
+        <h3>Summary Table 2: Department of <span id="deptNameDisplay2"></span></h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>DRR Action as envisaged in the Roadmap</th>
+                    <th>Activity</th>
+                    <th>Activity Stage</th>
+                    <th>Starting Year</th>
+                    <th>Ending Year</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody2">
+                <!-- Summary details will be populated here after form submission -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Export Buttons -->
+    <div class="export-buttons">
+        <button type="button" id="exportToWord">Export to Word</button>
+        <button type="button" id="exportToExcel">Export to Excel</button>
+        <button type="button" id="exportToPDF">Export to PDF</button>
+    </div>
+</div>
+
+<script>
+    // Initialize component count
+    let componentCount = 0;
+
+    // Define SFDRR Goals (Targets) and their Milestones based on provided mapping
+    const milestones = {
+        "Reducing Disaster Mortality": [
+            "Baseline status of deaths due to disasters developed.",
+            "Timely access to humanitarian assistance during disasters."
+        ],
+        "Reducing People Affected": [
+            "Baseline status of people affected by disasters developed.",
+            "Improved access to risk transfer mechanisms among people."
+        ],
+        "Reducing Economic Loss": [
+            "Improved access to risk transfer mechanisms in agriculture sector.",
+            "Improved access to risk transfer mechanisms in private sector.",
+            "Increase in use of sustainable sources of energy."
+        ],
+        "Reducing Infrastructure Damage": [
+            "Structural safety audit of Government offices and social infrastructure (schools, Anganwadi Centres, Hospitals, Community Halls, etc.) initiated.",
+            "Appropriate structural safety measures initiated for Government offices and social infrastructure.",
+            "Structural safety audit of critical infrastructure (power plants, industries, embankments, etc.) and commercial buildings initiated.",
+            "Appropriate structural safety measures initiated for critical infrastructure and commercial buildings."
+        ],
+        "Increase DRR Strategies": [
+            "Risk informed programming by the Government and Private Sector."
+        ],
+        "Increase Cooperation": [
+            "Increased coordination and collaboration between Government and NGOs.",
+            "Increased coordination and collaboration between Government and Academic Institutions.",
+            "Increased coordination and collaboration between Government and Private Sector.",
+            "Increased coordination and collaboration between Government and CSOs."
+        ],
+        "Increase Access to Early Warning Systems & Disaster Risk Information": [
+            "Effective Multi-Hazard Early Warning Systems established.",
+            "Improved understanding and awareness of disaster risks."
+        ]
+    };
+
+    // Define Common Measurable Indicators (CMI) based on Milestones
+    const cmiOptions = {
+        "Baseline status of deaths due to disasters developed.": [
+            "Year-wise Sex, Age, Disability Desegregated (SADD) data of last 10 years collected and analyzed by 2021."
+        ],
+        "Timely access to humanitarian assistance during disasters.": [
+            "At least 90% of the disaster affected people receive timely humanitarian assistance every year.",
+            "Reduce at least 5% deaths due to disasters annually by 2025 and 10% deaths by 2030."
+        ],
+        "Baseline status of people affected by disasters developed.": [
+            "Year-wise Sex, Age, Disability Desegregated (SADD) data of last 10 years collected and analyzed by 2021."
+        ],
+        "Improved access to risk transfer mechanisms among people.": [
+            "At least 10% annual increase in percentage of health insurance coverage among people by 2030."
+        ],
+        "Improved access to risk transfer mechanisms in agriculture sector.": [
+            "At least 10% annual increase in percentage of insurance coverage among farmers by 2030."
+        ],
+        "Improved access to risk transfer mechanisms in private sector.": [
+            "At least 10% annual increase in percentage of insurance coverage among industries and businesses by 2030."
+        ],
+        "Increase in use of sustainable sources of energy.": [
+            "At least 10% annual increase in percentage of solar energy in households, businesses, and industries."
+        ],
+        "Structural safety audit of Government offices and social infrastructure (schools, Anganwadi Centres, Hospitals, Community Halls, etc.) initiated.": [
+            "Number of offices and social infrastructure covered under the safety audit by 2025."
+        ],
+        "Appropriate structural safety measures initiated for Government offices and social infrastructure.": [
+            "Number of offices and social infrastructure covered under the corrective measures for structural safety by 2030."
+        ],
+        "Structural safety audit of critical infrastructure (power plants, industries, embankments, etc.) and commercial buildings initiated.": [
+            "Number of critical infrastructure and commercial buildings covered under the safety audit by 2025."
+        ],
+        "Appropriate structural safety measures initiated for critical infrastructure and commercial buildings.": [
+            "Number of critical infrastructure and commercial buildings covered under the corrective measures for structural safety by 2030."
+        ],
+        "Risk informed programming by the Government and Private Sector.": [
+            "Number of Departments integrating disaster risk reduction measures in their annual plan activities and budget from 2022 onwards.",
+            "Number of Departments develop Departmental Disaster Management Plan, SOPs, and Contingency Plans in line with Assam DRR Roadmap from 2022 onwards.",
+            "Number of Gaon Panchayat Development Plans integrating disaster risk reduction measures, including the needs of children, adolescents, women, elderly, and persons with disabilities from 2022 onwards.",
+            "Number of businesses/companies having Business Continuity Plans from 2022 onwards."
+        ],
+        "Increased coordination and collaboration between Government and NGOs.": [
+            "Number of joint initiatives taken by the Departments and NGOs integrating DRR from 2022 onwards."
+        ],
+        "Increased coordination and collaboration between Government and Academic Institutions.": [
+            "Number of joint initiatives taken by the Departments and Universities/Technical Institutes integrating DRR from 2022 onwards."
+        ],
+        "Increased coordination and collaboration between Government and Private Sector.": [
+            "Number of joint initiatives taken by the Departments and Companies/Entrepreneurs integrating DRR from 2022 onwards."
+        ],
+        "Increased coordination and collaboration between Government and CSOs.": [
+            "Number of joint initiatives taken by the Departments and CSOs (Youth Groups, Women SHGs, etc.) integrating DRR from 2022 onwards."
+        ],
+        "Effective Multi-Hazard Early Warning Systems established.": [
+            "Number of Early Warning System fully operational by 2025.",
+            "Number of people in villages and urban areas having access to the EWS."
+        ],
+        "Improved understanding and awareness of disaster risks.": [
+            "Number of awareness campaigns completed by 2025.",
+            "Percentage of rural and urban population practicing the “Do’s & Don’ts” before, during and after disasters by 2025.",
+            "Number of sector specific studies/research/surveys done by Government Departments contributing towards risk informed programming by 2025."
+        ]
+    };
+
+    // Function to generate year options
+    function generateYearOptions(start = 2020, end = 2035) {
+        let options = '<option value="">Select Year</option>';
+        for (let year = start; year <= end; year++) {
+            options += `<option value="${year}">${year}</option>`;
+        }
+        return options;
+    }
+
+    // Function to add a new SFDRR component box
+    document.getElementById('addComponent').addEventListener('click', function() {
+        componentCount++;
+        const componentBox = document.createElement('div');
+        componentBox.classList.add('component-box');
+        componentBox.id = `component-${componentCount}`;
+        
+        const prioritySelect = `
+            <label for="priority-${componentCount}">Select SFDRR Target:</label>
+            <select id="priority-${componentCount}" name="priority" onchange="populateMilestoneDropdown(${componentCount})" required>
+                <option value="">Select SFDRR Target</option>
+                <option value="Reducing Disaster Mortality">Reducing Disaster Mortality</option>
+                <option value="Reducing People Affected">Reducing People Affected</option>
+                <option value="Reducing Economic Loss">Reducing Economic Loss</option>
+                <option value="Reducing Infrastructure Damage">Reducing Infrastructure Damage</option>
+                <option value="Increase DRR Strategies">Increase DRR Strategies</option>
+                <option value="Increase Cooperation">Increase Cooperation</option>
+                <option value="Increase Access to Early Warning Systems & Disaster Risk Information">Increase Access to Early Warning Systems & Disaster Risk Information</option>
+            </select>
+        `;
+        
+        const milestoneSelect = `
+            <label for="milestone-${componentCount}">Select Milestone:</label>
+            <select id="milestone-${componentCount}" name="milestone" onchange="populateCmiDropdown(${componentCount})" required>
+                <option value="">Select Milestone</option>
+                <!-- Milestones will be populated based on selected SFDRR Goal -->
+            </select>
+        `;
+        
+        const cmiSelect = `
+            <label for="cmi-${componentCount}">Select Common Measurable Indicator (CMI):</label>
+            <select id="cmi-${componentCount}" name="cmi" required>
+                <option value="">Select CMI</option>
+                <!-- CMIs will be populated based on selected Milestone -->
+            </select>
+        `;
+
+        const drrActionEnvisaged = `
+            <label for="drrAction-${componentCount}">DRR Action considered for achieving the selected Milestone and CMI:</label>
+            <textarea id="drrAction-${componentCount}" name="drrAction" rows="4" placeholder="Specify the DRR Action." required></textarea>
+        `;
+
+        const sendaiPriority = `
+            <label for="sendai-${componentCount}">Relevant Sendai Framework Priority:</label>
+            <select id="sendai-${componentCount}" name="sendai" required>
+                <option value="">Select Sendai Priority</option>
+                <option value="Understanding disaster risk">Understanding disaster risk</option>
+                <option value="Strengthening disaster risk governance">Strengthening disaster risk governance</option>
+                <option value="Investing in disaster risk reduction for resilience">Investing in disaster risk reduction for resilience</option>
+                <option value="Enhancing disaster preparedness">Enhancing disaster preparedness</option>
+            </select>
+        `;
+
+        const activityBlock = `
+            <div id="activity-container-${componentCount}">
+                <h4>Activities</h4>
+                <div id="activities-${componentCount}">
+                    <!-- Add button to add activities dynamically -->
+                    <button type="button" onclick="addActivity(${componentCount})" class="add-component-btn">+ Add Activity</button>
+                </div>
+            </div>
+        `;
+
+        const removeComponentBtn = `
+            <button type="button" class="remove-component" onclick="removeComponent(${componentCount})">Remove Component</button>
+        `;
+
+        componentBox.innerHTML = prioritySelect + milestoneSelect + cmiSelect + drrActionEnvisaged + sendaiPriority + activityBlock + removeComponentBtn;
+        document.getElementById('sfdrrComponents').appendChild(componentBox);
+    });
+
+    // Function to remove a component
+    function removeComponent(componentId) {
+        const componentBox = document.getElementById(`component-${componentId}`);
+        componentBox.remove();
+    }
+
+    // Function to add a new activity under a component
+    function addActivity(componentId) {
+        const activityContainer = document.getElementById(`activities-${componentId}`);
+        const activityCount = activityContainer.querySelectorAll('.activity-block').length + 1;
+
+        const newActivity = `
+            <div class="activity-block" id="activity-${componentId}-${activityCount}">
+                <label for="activity-${componentId}-${activityCount}">Activity ${activityCount}:</label>
+                <textarea id="activity-${componentId}-${activityCount}" name="activity" rows="4" placeholder="Describe the activity." required></textarea>
+                
+                <label for="activityStage-${componentId}-${activityCount}">Activity Stage:</label>
+                <select id="activityStage-${componentId}-${activityCount}" name="activityStage" required>
+                    <option value="">Select Stage</option>
+                    <option value="Brainstorming">Brainstorming Phase</option>
+                    <option value="Proposal">Proposal Writing Phase</option>
+                    <option value="Planning">Planning Phase</option>
+                    <option value="Implementation">Implementation</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                
+                <label for="startingYear-${componentId}-${activityCount}">Starting Year:</label>
+                <select id="startingYear-${componentId}-${activityCount}" name="startingYear" required>
+                    ${generateYearOptions(2020, 2035)}
+                </select>
+                
+                <label for="endingYear-${componentId}-${activityCount}">Ending Year:</label>
+                <select id="endingYear-${componentId}-${activityCount}" name="endingYear" required>
+                    ${generateYearOptions(2020, 2035)}
+                </select>
+                
+                <label for="amount-${componentId}-${activityCount}">Amount Planned/Sanctioned:</label>
+                <input type="text" id="amount-${componentId}-${activityCount}" name="amount" placeholder="Enter amount in Rs." required>
+                
+                <!-- Remove Activity Button -->
+                <button type="button" class="remove-activity-btn" onclick="removeActivity(${componentId}, ${activityCount})">Remove Activity</button>
+            </div>
+        `;
+
+        activityContainer.insertAdjacentHTML('beforeend', newActivity);
+    }
+
+    // Function to remove an activity
+    function removeActivity(componentId, activityId) {
+        const activityBlock = document.getElementById(`activity-${componentId}-${activityId}`);
+        if (activityBlock) {
+            activityBlock.remove();
+        }
+    }
+
+    // Function to populate Milestone dropdown based on selected SFDRR Goal
+    function populateMilestoneDropdown(componentId) {
+        const milestoneSelect = document.getElementById(`milestone-${componentId}`);
+        const priorityValue = document.getElementById(`priority-${componentId}`).value;
+
+        milestoneSelect.innerHTML = `<option value="">Select Milestone</option>`; // Reset options
+        if (milestones[priorityValue]) {
+            milestones[priorityValue].forEach(milestone => {
+                const option = document.createElement('option');
+                option.value = milestone;
+                option.textContent = milestone;
+                milestoneSelect.appendChild(option);
+            });
+        }
+
+        // Reset CMI dropdown when milestone changes
+        const cmiSelect = document.getElementById(`cmi-${componentId}`);
+        cmiSelect.innerHTML = `<option value="">Select CMI</option>`;
+    }
+
+    // Function to populate CMI dropdown based on selected Milestone
+    function populateCmiDropdown(componentId) {
+        const cmiSelect = document.getElementById(`cmi-${componentId}`);
+        const selectedMilestone = document.getElementById(`milestone-${componentId}`).value;
+
+        cmiSelect.innerHTML = `<option value="">Select CMI</option>`; // Reset options
+        if (cmiOptions[selectedMilestone]) {
+            cmiOptions[selectedMilestone].forEach(cmi => {
+                const option = document.createElement('option');
+                option.value = cmi;
+                option.textContent = cmi;
+                cmiSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Handle form submission
+    document.getElementById('drrForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from refreshing the page
+
+        // Get department name
+        const departmentSelect = document.getElementById('department');
+        const department = departmentSelect.options[departmentSelect.selectedIndex].text;
+
+        // Display department name in summary tables
+        document.getElementById('deptNameDisplay1').textContent = department;
+        document.getElementById('deptNameDisplay2').textContent = department;
+
+        // Get summary table bodies
+        const summaryTableBody1 = document.getElementById('summaryTableBody1');
+        const summaryTableBody2 = document.getElementById('summaryTableBody2');
+
+        // Clear previous data in summary tables
+        summaryTableBody1.innerHTML = ''; 
+        summaryTableBody2.innerHTML = ''; 
+
+        let isValid = true;
+
+        // Loop through each SFDRR component
+        document.querySelectorAll('.component-box').forEach((componentBox, index) => {
+            const componentId = index + 1; // Assuming components are added sequentially
+
+            const priority = componentBox.querySelector(`[name="priority"]`).value;
+            const milestone = componentBox.querySelector(`[name="milestone"]`).value;
+            const cmi = componentBox.querySelector(`[name="cmi"]`).value;
+            const drrAction = componentBox.querySelector(`[name="drrAction"]`).value;
+            const sendaiPriority = componentBox.querySelector(`[name="sendai"]`).value;
+
+            // Validate required fields
+            if (!priority || !milestone || !cmi || !drrAction || !sendaiPriority) {
+                alert('Please fill all required fields in each SFDRR component.');
+                isValid = false;
+                return;
+            }
+
+            // Get all activities under this component
+            const activities = componentBox.querySelectorAll('.activity-block');
+
+            if (activities.length === 0) {
+                alert('Please add at least one activity for each SFDRR component.');
+                isValid = false;
+                return;
+            }
+
+            // Loop through each activity
+            activities.forEach((activityBlock, actIndex) => {
+                const activity = activityBlock.querySelector(`[name="activity"]`).value;
+                const activityStage = activityBlock.querySelector(`[name="activityStage"]`).value;
+                const startingYear = activityBlock.querySelector(`[name="startingYear"]`).value;
+                const endingYear = activityBlock.querySelector(`[name="endingYear"]`).value;
+                const amount = activityBlock.querySelector(`[name="amount"]`).value;
+
+                // Validate activity fields
+                if (!activity || !activityStage || !startingYear || !endingYear || !amount) {
+                    alert('Please fill all fields for each activity.');
+                    isValid = false;
+                    return;
+                }
+
+                // Populate Summary Table 1
+                const row1 = `
+                    <tr>
+                        <td>${priority}</td>
+                        <td>${milestone}</td>
+                        <td>${cmi}</td>
+                        <td>${drrAction}</td>
+                        <td>${sendaiPriority}</td>
+                        <td>Activity ${actIndex + 1}: ${activity}</td>
+                    </tr>
+                `;
+                summaryTableBody1.innerHTML += row1;
+
+                // Populate Summary Table 2
+                const row2 = `
+                    <tr>
+                        <td>${drrAction}</td>
+                        <td>${activity}</td>
+                        <td>${activityStage}</td>
+                        <td>${startingYear}</td>
+                        <td>${endingYear}</td>
+                        <td>${amount}</td>
+                    </tr>
+                `;
+                summaryTableBody2.innerHTML += row2;
+            });
+        });
+
+        if (isValid) {
+            // Display the summary sections
+            document.getElementById('summarySection1').style.display = 'block';
+            document.getElementById('summarySection2').style.display = 'block';
+            // Scroll to summary
+            document.getElementById('summarySection1').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Export to Word
+    document.getElementById('exportToWord').addEventListener('click', function() {
+        const table1 = document.querySelector('#summarySection1 table');
+        const table2 = document.querySelector('#summarySection2 table');
+        const department = document.getElementById('deptNameDisplay1').textContent.replace(/ /g, '_');
+
+        const htmlContent = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                  xmlns:w="urn:schemas-microsoft-com:office:word" 
+                  xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="UTF-8"><title>DRR Action Summary</title></head>
+            <body>
+                <h2>Summary Table 1: Department of ${department.replace(/_/g, ' ')}</h2>
+                ${table1.outerHTML}
+                <h2>Summary Table 2: Department of ${department.replace(/_/g, ' ')}</h2>
+                ${table2.outerHTML}
+            </body>
+            </html>
+        `;
+        const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `DRR_Action_Summary_Department_of_${department}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    // Export to Excel
+    document.getElementById('exportToExcel').addEventListener('click', function() {
+        const table1 = document.querySelector('#summarySection1 table');
+        const table2 = document.querySelector('#summarySection2 table');
+        const department = document.getElementById('deptNameDisplay1').textContent.replace(/ /g, '_');
+
+        const tableHTML = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                  xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                  xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="UTF-8"><title>DRR Action Summary</title></head>
+            <body>
+                <h2>Summary Table 1: Department of ${department.replace(/_/g, ' ')}</h2>
+                ${table1.outerHTML}
+                <h2>Summary Table 2: Department of ${department.replace(/_/g, ' ')}</h2>
+                ${table2.outerHTML}
+            </body>
+            </html>
+        `;
+        const blob = new Blob([tableHTML], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `DRR_Action_Summary_Department_of_${department}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    // Export to PDF
+    document.getElementById('exportToPDF').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const department = document.getElementById('deptNameDisplay1').textContent;
+
+        doc.text(`DRR Action Summary - Department of ${department}`, 10, 10);
+
+        // Add Summary Table 1
+        doc.autoTable({ html: '#summarySection1 table', startY: 20, headStyles: { fillColor: [41, 128, 185] } });
+
+        // Add Summary Table 2
+        const finalY = doc.lastAutoTable.finalY || 20;
+        doc.text(`DRR Action Summary - Department of ${department}`, 10, finalY + 10);
+        doc.autoTable({ html: '#summarySection2 table', startY: finalY + 15, headStyles: { fillColor: [41, 128, 185] } });
+
+        doc.save(`DRR_Action_Summary_Department_of_${department.replace(/ /g, '_')}.pdf`);
+    });
+</script>
+
+</body>
+</html>
